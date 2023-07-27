@@ -1,0 +1,30 @@
+.communication_container > .communication_wrapper ~ .communication_wrapper
+    border-top: 1px solid var(--v-maingrey-base)
+.communication_wrapper
+    transition-duration: 200ms
+    transition-timing-function: ease-out
+    transition-delay: 0s
+    transition-property: all
+    opacity: 1
+.communication
+    transition: color .16s ease -0.01s,border-color .16s ease -0.01s
+.communication .previewcontent
+    padding-bottom: 16px
+    padding-top: 16px
+.communication .communicationheader span
+    margin: auto
+.communication .communicationcontentcomplete
+    word-break: break-word !important
+.communication .communicationcontent
+    word-break: break-word !important
+    overflow: hidden
+    display: -webkit-box
+    display: -moz-box
+    -webkit-box-orient: vertical
+    -moz-box-orient: vertical
+    box-orient: vertical
+    -webkit-line-clamp: 4
+    -moz-line-clamp: 4
+    max-lines: 4
+    text-overflow: ellipsis
+    white-space: normal

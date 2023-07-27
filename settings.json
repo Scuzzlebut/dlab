@@ -1,0 +1,72 @@
+{
+    "LaravelExtraIntellisense.modelsPaths": ["App"],
+    "editor.quickSuggestions": {
+        "comments": "on",
+        "strings": "on",
+        "other": "on"
+    },
+    "editor.suggestOnTriggerCharacters": true,
+    "editor.multiCursorModifier": "ctrlCmd",
+    "editor.snippetSuggestions": "top",
+    "editor.formatOnPaste": true,
+    "editor.fontFamily": "Consolas",
+    "emmet.triggerExpansionOnTab": true,
+    "php.suggest.basic": false,
+    "editor.autoIndent": "full",
+    "emmet.includeLanguages": {
+        "blade": "html"
+    },
+    "blade.format.enable": true, // if you would like to enable blade format
+    "[blade]": {
+        "editor.autoClosingBrackets": "always"
+    },
+    "explorer.openEditors.visible": 0,
+    "editor.minimap.enabled": false,
+    "workbench.colorTheme": "Visual Studio Dark",
+    "extensions.closeExtensionDetailsOnViewChange": true,
+    "explorer.confirmDragAndDrop": false,
+    "intelephense.diagnostics.undefinedTypes": false,
+    "intelephense.diagnostics.undefinedMethods": false,
+    "javascript.updateImportsOnFileMove.enabled": "always",
+    "intelephense.diagnostics.undefinedFunctions": false,
+    "intelephense.completion.triggerParameterHints": false,
+    "intelephense.compatibility.correctForBaseClassStaticUnionTypes": false,
+    "intelephense.diagnostics.undefinedClassConstants": false,
+    "intelephense.diagnostics.implementationErrors": false,
+    "intelephense.diagnostics.undefinedConstants": false,
+    "intelephense.diagnostics.undefinedSymbols": false,
+    "intelephense.diagnostics.undefinedProperties": false,
+    "intelephense.diagnostics.unexpectedTokens": false,
+    "intelephense.diagnostics.unusedSymbols": false,
+    "intelephense.diagnostics.typeErrors": false,
+    "emmet.preferences": {},
+    "[dart]": {
+        "editor.formatOnSave": true,
+        "editor.formatOnType": true,
+        "editor.rulers": [80],
+        "editor.selectionHighlight": false,
+        "editor.suggest.snippetsPreventQuickSuggestions": false,
+        "editor.suggestSelection": "first",
+        "editor.tabCompletion": "onlySnippets",
+        "editor.wordBasedSuggestions": false
+    },
+    "[vue]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[html]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[javascript]": {
+        "editor.defaultFormatter": "vscode.typescript-language-features"
+    },
+    "intelephense.environment.phpVersion": "8.1.0",
+    "editor.codeActionsOnSave": {},
+    "intelephense.format.braces": "k&r",
+    "html.format.wrapLineLength": 1000,
+    "html.format.wrapAttributes": "auto",
+    "prettier.singleAttributePerLine": false,
+    "prettier.printWidth": 1000,
+    "prettier.requireConfig": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true
+}
