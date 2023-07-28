@@ -29,7 +29,7 @@
               </v-col>
             </v-row>
       </material-card>
-      <create-edit-staff v-if="showCreateEditStaff"></create-edit-staff>
+      <create-edit-activity v-if="showCreateEditActivity"></create-edit-activity>
     </main-container>
 </template>
 
@@ -78,8 +78,8 @@ export default {
       }
       return timetable
     },
-    showCreateEditStaff(){
-      return this.$store.getters.showCreateEditStaff
+    showCreateEditActivity(){
+      return this.$store.getters.showCreateEditActivity
     }
   },
   methods: {
@@ -88,7 +88,7 @@ export default {
           object: _.cloneDeep(this.user.staff),
           filecategory: 'staff'
       })
-      this.$store.dispatch('showAction','showCreateEditStaff')
+      this.$store.dispatch('showAction','showCreateEditActivity')
     }
   }
 }

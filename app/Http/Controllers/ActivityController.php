@@ -12,12 +12,12 @@ use Illuminate\Support\Facades\Mail;
 use App\Http\Requests\SimpleRequest as Request;
 
 class ActivityController extends Controller {
+    use \App\Traits\GlobalSettings;
 
     public function index(Request $request) {
         $this->authorize('viewAny', Activity::class);
 
         $activities = Activity::with('project', 'staff', 'type');
-
         $activities = $this->doTheSearch($activities, $request);
         $activities = $this->doTheSort($activities, $request);
         $activities = $this->doThePagination($activities, $request);

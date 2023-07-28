@@ -9,7 +9,7 @@ const state = {
     activity_options: {
         page: 1,
         itemsPerPage: 10,
-        sortBy: ['date_start'],
+        sortBy: ['id'],
         sortDesc: [true],
         search: '',
         year: null,
@@ -17,12 +17,13 @@ const state = {
         type: null,
         staff_ids: []
     },
-    activity: {},
+    activities: {},
     currentActivity: {},
     showCreateEditActivity: false,
 }
 
 const getters = {
+    getActivities: state => state.activities,
     getActivityTypes: state => state.activity_types,
     getProjects: state => state.projects,
     getActivityOptions: state => state.activity_options,
@@ -30,23 +31,21 @@ const getters = {
     activity_types_loading: state => state.activity_types_loading !== 0,
     projects_loading: state => state.projects_loading !== 0,
     getCurrentActivity: state => state.currentActivity,
-
-    getAttendance: state => state.attendance,
-    showCreateEditAttendance: state => state.showCreateEditAttendance,
+    showCreateEditActivity: state => state.showCreateEditActivity,
 }
 
 const actions = {
     fetchActivities({ commit, dispatch }) {
         commit('START_ACTIVITY_LOADING');
-        axios.get('/api/activities', { params: state.staff_options })
+        axios.get('/api/activities', { params: state.activity_options })
             .then(res => {
-                commit('setStaff', res.data);
+                commit('setActivities', res.data);
             })
             .catch(err => {
                 dispatch('handleError', err);
             })
             .then(() => {
-                commit('STOP_STAFF_LOADING');
+                commit('STOP_ACTIVITY_LOADING');
             })
     },
     fetchProjects({ commit, dispatch }) {
@@ -86,13 +85,16 @@ const actions = {
 }
 
 const mutations = {
+    setActivityOptions(state, value) {
+        Vue.set(state, 'activity_options', value)
+    },
     setActivityTypes(state, value) {
         Vue.set(state, 'activity_types', value)
-        state.activity_types = JSON.parse(JSON.stringify(state.activity_types))
+        // state.activity_types = JSON.parse(JSON.stringify(state.activity_types))
     },
     setProjects(state, value) {
         Vue.set(state, 'projects', value)
-        state.projects = JSON.parse(JSON.stringify(state.projects))
+        // state.projects = JSON.parse(JSON.stringify(state.projects))
     },
     START_ACTIVITY_LOADING(state) {
         state.activity_loading++
@@ -116,9 +118,9 @@ const mutations = {
         Vue.set(state, 'currentActivity', value)
         state.currentActivity = JSON.parse(JSON.stringify(state.currentActivity))
     },
-    setActivity(state, value) {
-        Vue.set(state, 'activity', value)
-        state.activity = JSON.parse(JSON.stringify(state.activity))
+    setActivities(state, value) {
+        Vue.set(state, 'activities', value)
+        state.activities = JSON.parse(JSON.stringify(state.activities))
     },
     showCreateEditActivity(state) {
         state.showCreateEditActivity = true;

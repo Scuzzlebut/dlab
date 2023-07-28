@@ -217,7 +217,14 @@
     "timetracker": {
         "pagetitle": "Timetracker",
         "list_title": "Time tracker",
-        "create_title": "Inserisci attività"
+        "create_title": "Inserisci attività",
+        "mainaction": "Inserisci attività",
+        "project": "Progetto",
+        "type": "Tipologia",
+        "hours": "Ore",
+        "user": "Utente",
+        "day": "Giorno",
+        "note": "Note"
     },
     "staff": {
         "pagetitle": "Dipendenti",

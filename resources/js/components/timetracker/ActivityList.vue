@@ -1,25 +1,15 @@
 <template>
     <main-container>
-        <material-card icon="fas fa-clock" :title="$t('timetracker.list_title')" :main_action="main_action" @mainAction="createStaff" noduplicate :selected="selected_staff" @unselectAll="selected_staff=[]">
+        <material-card icon="fas fa-clock" :title="$t('timetracker.list_title')" :main_action="main_action" @mainAction="createActivity" noduplicate>
             <template slot="selection-actions">
 
             </template>
             <template slot="filters">
-                <v-col cols="12" xs="12" sm="3">
-                    <ValidationProvider ref="all_employees" vid='all_employees' :name="$t('staff.all_employees')">
-                        <v-checkbox hide-details :label="$t('staff.all_employees')" v-model="staff_options.all" ></v-checkbox>
-                    </ValidationProvider>
-                </v-col>
-                <v-col cols="12" xs="12" sm="5">
-                    <search-box v-model="staff_options.search" nocolor @change="staff_options.page=1"></search-box>
-                </v-col>
             </template>
-            <material-table @click-action="editStaff" :selected.sync="selected_staff" show-select :headers="staff_headers" :items="staff.data" :options.sync="staff_options" :server-items-length="staff.total" :loading="staff_loading">
-                <template v-slot:item.birthday="{ item }">{{$formatters.frontEndDateFormat(item.birthday)}}</template>
-                <template v-slot:item.role_id="{ item }">{{item.role_name}}</template>
-                <template v-slot:item.type_id="{ item }">{{item.type_name}}</template>
+            <material-table @click-action="editActivity" :headers="activity_headers" :items="activities.data" :options.sync="activity_options" :server-items-length="activities.total" :loading="activity_loading">
+                <template v-slot:item.day="{ item }">{{ $formatters.frontEndDateFormat(item.day) }}</template>
             </material-table>
-            <create-edit-staff v-if="showCreateEditStaff"></create-edit-staff>
+            <create-edit-activity v-if="showCreateEditActivity"></create-edit-activity>
         </material-card>
     </main-container>
 </template>
@@ -27,133 +17,76 @@
 <script>
 export default {
     data: () => ({
-        originalstaff_options: null,
-        selected_staff: [],
+        original_activities_options: null,
     }),
     computed: {
         main_action(){
             if (this.$hasRole('Admin')){
                 return {
                     icon: 'fas fa-plus',
-                    text: this.$t('staff.mainaction')
+                    text: this.$t('timetracker.mainaction')
                 }
             }
         },
-        staff_options: {
+        activity_options: {
             get: function () {
-                return this.$store.getters.getStaffOptions;
+                return this.$store.getters.getActivityOptions;
             },
             set: function (value) {
-                this.$store.commit('setStaffOptions', value);
+                this.$store.commit('setActivityOptions', value);
             },
         },
-        staff_headers() {
+        activity_headers() {
             let headers = []
             headers.push({
-                text: this.$t('staff.code'),
-                value: 'code',
+                text: this.$t('timetracker.user'),
+                value: 'staff.fullname',
                 align: 'left',
                 sortable: true,
-                selected: false
             })
             headers.push({
-                text: this.$t('staff.surname'),
-                value: 'surname',
+                text: this.$t('timetracker.project'),
+                value: 'project.title',
                 align: 'left',
                 sortable: true,
-                selected: true
             })
             headers.push({
-                text: this.$t('staff.name'),
-                value: 'name',
+                text: this.$t('timetracker.type'),
+                value: 'type.title',
                 align: 'left',
                 sortable: true,
-                selected: true
             })
             headers.push({
-                text: this.$t('staff.taxcode'),
-                value: 'taxcode',
+                text: this.$t('timetracker.day'),
+                value: 'day',
                 align: 'left',
                 sortable: true,
-                selected: true
             })
             headers.push({
-                text: this.$t('staff.address'),
-                value: 'address',
+                text: this.$t('timetracker.hours'),
+                value: 'hours',
                 align: 'left',
                 sortable: true,
-                selected: false
             })
             headers.push({
-                text: this.$t('staff.city'),
-                value: 'city',
+                text: this.$t('timetracker.note'),
+                value: 'note',
                 align: 'left',
-                sortable: true,
-                selected: false
             })
-            headers.push({
-                text: this.$t('staff.postcode'),
-                value: 'postcode',
-                align: 'left',
-                sortable: true,
-                selected: false
-            })
-            headers.push({
-                text: this.$t('staff.phone_number'),
-                value: 'phone_number',
-                align: 'left',
-                sortable: true,
-                selected: true
-            })
-            headers.push({
-                text: this.$t('staff.private_email'),
-                value: 'private_email',
-                align: 'left',
-                sortable: true,
-                selected: true
-            })
-            headers.push({
-                text: this.$t('staff.gender'),
-                value: 'gender',
-                align: 'left',
-                sortable: true,
-                selected: false
-            })
-            headers.push({
-                text: this.$t('staff.birthday'),
-                value: 'birthday',
-                align: 'left',
-                sortable: true,
-                selected: true
-            })
-            headers.push({
-                text: this.$t('staff.role_id'),
-                value: 'role_id',
-                align: 'left',
-                sortable: true,
-                selected: true
-            })
-            headers.push({
-                text: this.$t('staff.type_id'),
-                value: 'type_id',
-                align: 'left',
-                sortable: true,
-                selected: true
-            })
-            return {data: headers, id: 'staff_headers'}
+            return {data: headers, id: 'activity_headers'}
         },
-        staff_loading() {
-            return this.$store.getters.staff_loading;
+        activity_loading() {
+            return this.$store.getters.activity_loading;
         },
-        staff() {
-            return this.$store.getters.getStaff;
+        activities() {
+            return this.$store.getters.getActivities;
         },
-        showCreateEditStaff(){
-            return this.$store.getters.showCreateEditStaff
+        showCreateEditActivity(){
+            return this.$store.getters.showCreateEditActivity
         }
     },
     methods: {
-        createStaff(){
+        createActivity(){
             let element={
                 date_start: moment().format('YYYY-MM-DD'),
                 role_id: 1,
@@ -164,13 +97,9 @@ export default {
                 afternoon_starttime: '14:00',
                 afternoon_endtime: '18:00'
             }
-            this.$store.dispatch('setCurrentModelForAttachment',{
-                object: element,
-                filecategory: 'staff'
-            })
-            this.$store.dispatch('showAction','showCreateEditStaff')
+            this.$store.dispatch('showAction','showCreateEditActivity')
         },
-        editStaff(item){
+        editActivity(item){
             let cloned =_.cloneDeep(item)
             if (!cloned.morning_starttime){
                 cloned.morning_starttime= '09:00',
@@ -178,23 +107,19 @@ export default {
                 cloned.afternoon_starttime= '14:00',
                 cloned.afternoon_endtime= '18:00'
             }
-            this.$store.dispatch('setCurrentModelForAttachment',{
-                object: _.cloneDeep(item),
-                filecategory: 'staff'
-            })
-            this.$store.dispatch('showAction','showCreateEditStaff')
+            this.$store.dispatch('showAction','showCreateEditActivity')
         },
-        loadStaff() {
-            if (!this.$functions.ObjectAreEqual(this.originalstaff_options, this.staff_options)) {
-                this.originalstaff_options = _.cloneDeep(this.staff_options)
-                this.$store.dispatch('fetchStaff');
+        loadActivities() {
+            if (!this.$functions.ObjectAreEqual(this.original_activities_options, this.activity_options)) {
+                this.original_activities_options = _.cloneDeep(this.activity_options)
+                this.$store.dispatch('fetchActivities');
             }
         },
     },
     watch: {
-        staff_options: {
+        activity_options: {
             handler() {
-                this.loadStaff()
+                this.loadActivities()
             },
             deep: true,
         },

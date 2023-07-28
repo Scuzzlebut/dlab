@@ -11,7 +11,7 @@ class Activity extends Model
 
     public function type(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo(ActivityType::class);
+        return $this->belongsTo(ActivityType::class,"activity_type_id");
     }
     public function project(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {

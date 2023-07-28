@@ -11,6 +11,7 @@ import paysheet from './vuex_modules/paysheet'
 import popuphandler from './vuex_modules/popuphandler'
 import staff from './vuex_modules/staff'
 import user from './vuex_modules/user'
+import activity from './vuex_modules/activity'
 
 Vue.use(Vuex)
 
@@ -25,6 +26,7 @@ export default new Vuex.Store({
         paysheet,
         popuphandler,
         staff,
+        activity,
         user
     }
 });

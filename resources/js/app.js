@@ -151,6 +151,10 @@ import RelatedStaff from "./components/staff/RelatedStaff.vue";
 Vue.component("create-edit-staff", CreateEditStaff);
 Vue.component("related-staff", RelatedStaff);
 
+//ACTIVITY
+import CreateEditActivity from "./components/timetracker/CreateEditActivity.vue";
+Vue.component("create-edit-activity", CreateEditActivity);
+
 const app = new Vue({
     el: "#app",
     beforeCreate() {

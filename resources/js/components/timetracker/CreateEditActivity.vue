@@ -1,5 +1,5 @@
 <template>
-    <create-edit-layout v-if="showCreateEditStaff && loaded" :disableedit="currentStaff.accepted" element="Staff" icon="fas fa-building-user" @duplicatecomplete="$emit('duplicatecomplete')">
+    <create-edit-layout v-if="showCreateEditActivity && loaded" :disableedit="currentStaff.accepted" element="Staff" icon="fas fa-building-user" @duplicatecomplete="$emit('duplicatecomplete')">
         <v-col cols="12" xs="12" align="right" class="py-0">
             <material-button v-if="!isProfileEdit && canChangeManagers" @click="showInstantEdit('managers_edit')" small outlined :color="$functions.isEmpty(currentStaff.managers) ? '' : 'secondary'">
                 {{ $t("staff.managers") }}
@@ -244,8 +244,8 @@ export default {
                 this.$store.commit("setCurrentStaff", value);
             },
         },
-        showCreateEditStaff() {
-            return this.$store.getters.showCreateEditStaff;
+        showCreateEditActivity() {
+            return this.$store.getters.showCreateEditActivity;
         },
         displayedScore() {
             return Math.floor(this.score / 10);
