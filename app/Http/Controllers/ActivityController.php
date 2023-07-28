@@ -38,4 +38,8 @@ class ActivityController extends Controller {
     public function store(Request $request) {
 
     }
+
+    public function delete(Request $request) {
+
+    }
 }

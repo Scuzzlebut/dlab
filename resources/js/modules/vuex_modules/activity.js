@@ -81,7 +81,28 @@ const actions = {
                     commit("STOP_ACTIVITY_TYPES_LOADING")
                 });
         })
-    }
+    },
+    deleteActivity({ commit, dispatch }, id) {
+        commit('START_ACTIVITY_LOADING');
+        return new Promise((resolve, reject) => {
+            axios.delete('/api/activities/' + id)
+                .then(res => {
+                    dispatch('handleResponseMessage', res.data)
+                    if (res.data.object) {
+                        commit('removeActivity', id)
+                        dispatch('hideAction', 'hideCreateEditCommunication')
+                    }
+                    resolve(res.data)
+                })
+                .catch(err => {
+                    dispatch('handleError', err);
+                    reject(err)
+                })
+                .then(function () {
+                    commit('STOP_ACTIVITY_LOADING');
+                });
+        });
+    },
 }
 
 const mutations = {
@@ -137,6 +158,18 @@ const mutations = {
                     commit("STOP_ACTIVITY_LOADING")
                 });
         })
+    },
+    removeActivity(state, id) {
+        if (state.activities.data) {
+            let found = state.activities.data.findIndex(obj => obj.id === id)
+            if (found !== -1) {
+                state.activities.data.splice(found, 1)
+                state.activities.data.total -= 1
+                state.activities = JSON.parse(JSON.stringify(state.activities))
+            }
+        }
+        state.activity_options.page = 1
+        state.activity_options = JSON.parse(JSON.stringify(state.activity_options))
     },
     showCreateEditActivity(state) {
         state.showCreateEditActivity = true;
