@@ -17,6 +17,8 @@
 </template>
 
 <script>
+import _ from "lodash";
+
 export default {
     data: () => ({
         original_activities_options: null,
@@ -117,14 +119,8 @@ export default {
             this.$store.dispatch('showAction','showCreateEditActivity')
         },
         editActivity(item){
-            let cloned =_.cloneDeep(item)
-            if (!cloned.morning_starttime){
-                cloned.morning_starttime= '09:00',
-                cloned.morning_endtime= '13:00',
-                cloned.afternoon_starttime= '14:00',
-                cloned.afternoon_endtime= '18:00'
-            }
-            this.$store.dispatch('showAction','showCreateEditActivity')
+            this.$store.commit('setCurrentActivity', _.cloneDeep(item))
+            this.$store.dispatch("showAction", "showCreateEditActivity");
         },
         loadActivities() {
             if (!this.$functions.ObjectAreEqual(this.original_activities_options, this.activity_options)) {

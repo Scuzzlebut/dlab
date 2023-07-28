@@ -103,6 +103,22 @@ const actions = {
                 });
         });
     },
+    showActivityDetails({ commit, dispatch }) {
+        commit('START_ACTIVITY_LOADING');
+        return new Promise((resolve, reject) => {
+            axios.get('/api/activities/' + state.currentActivity.id)
+                .then((res) => {
+                    resolve(res.data)
+                })
+                .catch((err) => {
+                    dispatch('handleError', err)
+                    reject(err)
+                })
+                .then(function () {
+                    commit("STOP_ACTIVITY_LOADING")
+                });
+        })
+    },
 }
 
 const mutations = {
@@ -142,22 +158,6 @@ const mutations = {
     setActivities(state, value) {
         Vue.set(state, 'activities', value)
         state.activities = JSON.parse(JSON.stringify(state.activities))
-    },
-    showActivityDetails({ commit, dispatch }) {
-        commit('START_ACTIVITY_LOADING');
-        return new Promise((resolve, reject) => {
-            axios.get('/api/activities/' + state.currentActivity.id)
-                .then((res) => {
-                    resolve(res.data)
-                })
-                .catch((err) => {
-                    dispatch('handleError', err)
-                    reject(err)
-                })
-                .then(function () {
-                    commit("STOP_ACTIVITY_LOADING")
-                });
-        })
     },
     removeActivity(state, id) {
         if (state.activities.data) {
