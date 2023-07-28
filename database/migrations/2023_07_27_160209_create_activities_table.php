@@ -19,7 +19,7 @@ return new class extends Migration
             $table->foreignId('project_id')->constrained('projects')->onUpdate('cascade')->onDelete('cascade');
             $table->foreignId('activity_type_id')->constrained('activity_types')->onUpdate('cascade')->onDelete('cascade'); //chi esegue la richiesta
             $table->date('day');
-            $table->integer('hours')->default(0);
+            $table->float('hours')->default(0);
             $table->text('note')->nullable();
             $table->softDeletes();
             $table->timestamps();

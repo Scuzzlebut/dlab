@@ -106,19 +106,34 @@ export default {
             });
         },
         createActivity(){
-            let element={
-                date_start: moment().format('YYYY-MM-DD'),
-                role_id: 1,
-                type_id: 1,
-                gender: 'M',
-                morning_starttime: '09:00',
-                morning_endtime: '13:00',
-                afternoon_starttime: '14:00',
-                afternoon_endtime: '18:00'
+            let newtime = moment("01/01/2000 00:00", "YYYY-MM-DD HH:mm");
+            let element = {
+                day: moment().format('YYYY-MM-DD'),
+                timepicker: newtime.format("YYYY-MM-DD HH:mm:ss")
             }
+            this.$store.commit('setCurrentActivity', element)
             this.$store.dispatch('showAction','showCreateEditActivity')
         },
         editActivity(item){
+            let time = (item.hours + "").split(".")
+            let hours = time[0]
+            let minutes = time[1] || 0
+            switch (minutes){
+                case '25':
+                    minutes = 15;
+                    break;
+                case '5':
+                    minutes = 30;
+                    break;
+                case '75':
+                    minutes = 45;
+                    break;
+                default:
+                    minutes = "00";
+                    break;
+            }
+            let newtime = moment("01/01/2000 "+hours + ":" + minutes, "YYYY-MM-DD HH:mm");
+            item.timepicker = newtime.format("YYYY-MM-DD HH:mm:ss")
             this.$store.commit('setCurrentActivity', _.cloneDeep(item))
             this.$store.dispatch("showAction", "showCreateEditActivity");
         },
