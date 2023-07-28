@@ -128,6 +128,40 @@ export default {
                 }
                 return types
             },
+            activityTypes: function (value = null) {
+                let types = store.getters.getActivityTypes
+                if (!types) {
+                    if (!store.getters.activity_types_loading) {
+                        store.dispatch('fetchActivityTypes')
+                    }
+                    if (value != null) {
+                        return null
+                    }
+                    return []
+                }
+                let cloned = _.cloneDeep(types)
+                if (value != null && types) {
+                    return cloned.find(obj => obj.id == value)?.title ?? null
+                }
+                return cloned
+            },
+            projects: function (value = null) {
+                let projects = store.getters.getProjects
+                if (!projects) {
+                    if (!store.getters.projects_loading) {
+                        store.dispatch('fetchProjects')
+                    }
+                    if (value != null) {
+                        return null
+                    }
+                    return []
+                }
+                let cloned = _.cloneDeep(types)
+                if (value != null && types) {
+                    return cloned.find(obj => obj.id == value)?.title ?? null
+                }
+                return cloned
+            },
             staffRoles: function (value = null) {
                 let types = store.getters.getStaffRoles
                 if (!types) {

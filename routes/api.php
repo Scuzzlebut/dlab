@@ -31,6 +31,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::get('/get-staff-types', [\App\Http\Controllers\UtilityController::class, 'getStaffTypes']);
         Route::get('/get-staff-roles', [\App\Http\Controllers\UtilityController::class, 'getStaffRoles']);
         Route::get('/get-attendance-types', [\App\Http\Controllers\UtilityController::class, 'getAttendanceTypes']);
+        Route::get('/get-projects', [\App\Http\Controllers\UtilityController::class, 'getProjectsTypes']);
+        Route::get('/get-activity-types', [\App\Http\Controllers\UtilityController::class, 'getActivityTypes']);
     });
 
     Route::prefix('staff')->group(function () {
@@ -73,6 +75,14 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::put('{id}/reset', [\App\Http\Controllers\Admin\AttendanceController::class, 'reset']);
         Route::delete('{id}', [\App\Http\Controllers\AttendanceController::class, 'destroy']);
         Route::post('/export-download', [\App\Http\Controllers\Admin\AttendanceController::class, 'export']);
+    });
+
+    Route::prefix('activities')->group(function () {
+        Route::get('/', [\App\Http\Controllers\ActivityController::class, 'index']);
+        Route::get('{id}', [\App\Http\Controllers\ActivityController::class, 'show']);
+        Route::post('/', [\App\Http\Controllers\ActivityController::class, 'store']);
+        Route::put('{id}', [\App\Http\Controllers\ActivityController::class, 'update']);
+        Route::delete('{id}', [\App\Http\Controllers\ActivityController::class, 'destroy']);
     });
 
     Route::prefix('attachment')->group(function () {

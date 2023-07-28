@@ -214,8 +214,10 @@
         "11": "Nov",
         "12": "Dic"
     },
-    "timetracking": {
-        "pagetitle": "Timetracking"
+    "timetracker": {
+        "pagetitle": "Timetracker",
+        "list_title": "Time tracker",
+        "create_title": "Inserisci attività"
     },
     "staff": {
         "pagetitle": "Dipendenti",

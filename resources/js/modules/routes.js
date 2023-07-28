@@ -23,6 +23,7 @@ import User from "../components/staff/User.vue";
 
 import Dashboard from "../components/Dashboard.vue"
 import Layout from "../components/Layout.vue"
+import ActivityList from "../components/timetracker/ActivityList.vue";
 
 Vue.use(VueRouter);
 
@@ -78,7 +79,7 @@ const ifHasPermission = (to, from, next) => {
             })
         }
 
-        
+
     }
     else {
         next('/login');
@@ -103,7 +104,7 @@ const routes = [
         name: 'askreset',
         component: AskReset,
         beforeEnter: ifNotAuthenticated,
-    }, 
+    },
     {
         path: '/reset-password-go/',
         name: 'resetpassword',
@@ -167,6 +168,11 @@ const routes = [
                 path: "/user",
                 name: "user",
                 component: User
+            },
+            {
+                path: "/timetracker",
+                name: "timetracker",
+                component: ActivityList
             }
         ]
     },
@@ -177,7 +183,7 @@ export const router = new VueRouter({
     mode: 'history',
     base: import.meta.env.VITE_BASE_PATH,
     routes
-}); 
+});
 
 window.popStateDetected = false
 window.addEventListener('popstate', () => {

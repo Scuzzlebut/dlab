@@ -144,8 +144,8 @@ export default {
       }
       routes.push({
         icon: 'fas fa-clock',
-        title: this.$t('timetracking.pagetitle'),
-        to: 'staff'
+        title: this.$t('timetracker.pagetitle'),
+        to: 'timetracker'
       })
       return routes
     },
