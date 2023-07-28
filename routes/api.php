@@ -31,7 +31,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::get('/get-staff-types', [\App\Http\Controllers\UtilityController::class, 'getStaffTypes']);
         Route::get('/get-staff-roles', [\App\Http\Controllers\UtilityController::class, 'getStaffRoles']);
         Route::get('/get-attendance-types', [\App\Http\Controllers\UtilityController::class, 'getAttendanceTypes']);
-        Route::get('/get-projects', [\App\Http\Controllers\UtilityController::class, 'getProjectsTypes']);
+        Route::get('/get-projects', [\App\Http\Controllers\UtilityController::class, 'getProjects']);
         Route::get('/get-activity-types', [\App\Http\Controllers\UtilityController::class, 'getActivityTypes']);
     });
 

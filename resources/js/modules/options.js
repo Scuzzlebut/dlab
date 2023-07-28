@@ -129,8 +129,8 @@ export default {
                 return types
             },
             activityTypes: function (value = null) {
-                let types = store.getters.getActivityTypes
-                if (!types) {
+                let options = store.getters.getActivityTypes
+                if (!options) {
                     if (!store.getters.activity_types_loading) {
                         store.dispatch('fetchActivityTypes')
                     }
@@ -139,8 +139,8 @@ export default {
                     }
                     return []
                 }
-                let cloned = _.cloneDeep(types)
-                if (value != null && types) {
+                let cloned = _.cloneDeep(options)
+                if (value != null && options) {
                     return cloned.find(obj => obj.id == value)?.title ?? null
                 }
                 return cloned
@@ -156,8 +156,8 @@ export default {
                     }
                     return []
                 }
-                let cloned = _.cloneDeep(types)
-                if (value != null && types) {
+                let cloned = _.cloneDeep(projects)
+                if (value != null && projects) {
                     return cloned.find(obj => obj.id == value)?.title ?? null
                 }
                 return cloned

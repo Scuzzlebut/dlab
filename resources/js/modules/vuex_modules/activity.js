@@ -68,9 +68,9 @@ const actions = {
     fetchActivityTypes({ commit, dispatch }) {
         commit('START_ACTIVITY_TYPES_LOADING');
         return new Promise((resolve, reject) => {
-            axios.get('/api/utility/get-attendance-types')
+            axios.get('/api/utility/get-activity-types')
                 .then(res => {
-                    commit('setAttendanceTypes', res.data)
+                    commit('setActivityTypes', res.data)
                     resolve(res.data)
                 })
                 .catch(err => {

@@ -15,11 +15,24 @@
             </material-button>
             <attachments-badge class="ml-2" element="Staff"></attachments-badge>
         </v-col>-->
+        <v-col cols="12" xs="12" sm="4">
+            <ValidationProvider ref='project_id' vid='project_id' :name="$t('timetracker.project')" rules="required" v-slot="{ errors,field }">
+                <v-select :label="$t('timetracker.project')" v-bind:items="$appOptions.projects()" v-model="currentActivity.project_id" item-text="title" item-value="id" small-chips :error-messages="errors">
+                </v-select>
+            </ValidationProvider>
+        </v-col>
+        <v-col cols="12" xs="12" sm="4">
+            <ValidationProvider ref='type_id' vid='type_id' :name="$t('timetracker.type')" rules="required" v-slot="{ errors,field }">
+                <v-select :label="$t('timetracker.type')" v-bind:items="$appOptions.activityTypes()" v-model="currentActivity.activity_type_id" item-text="title" item-value="id" small-chips :error-messages="errors">
+                </v-select>
+            </ValidationProvider>
+        </v-col>
         <v-col cols="12" xs="12" sm="2">
             <ValidationProvider ref="note" vid="note" :name="$t('timetracker.note')" rules="" v-slot="{ errors, field }">
                 <v-text-field :label="$t('timetracker.note')" v-model="currentActivity.note" :error-messages="errors"></v-text-field>
             </ValidationProvider>
-        </v-col><!--
+        </v-col>
+        <!--
         <v-col cols="12" xs="12" :sm="isProfileEdit || !$can('roles-edit') ? 6 : 4">
             <ValidationProvider ref="surname" vid="surname" :name="$t('staff.surname')" rules="required" v-slot="{ errors, field }">
                 <v-text-field class="required" :label="$t('staff.surname')" v-model="currentStaff.surname" :error-messages="errors"></v-text-field>
