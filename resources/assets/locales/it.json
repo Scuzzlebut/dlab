@@ -214,6 +214,9 @@
         "11": "Nov",
         "12": "Dic"
     },
+    "timetracking": {
+        "pagetitle": "Timetracking"
+    },
     "staff": {
         "pagetitle": "Dipendenti",
         "list_title": "Elenco dipendenti",

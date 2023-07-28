@@ -19,5 +19,7 @@ class DatabaseSeeder extends Seeder {
         Staff::factory(50)->create();
         Communication::factory(25)->create();
         Attendance::factory(30)->create();
+        $this->call(ActivityTypeSeeder::class);
+        $this->call(ProjectSeeder::class);
     }
 }
