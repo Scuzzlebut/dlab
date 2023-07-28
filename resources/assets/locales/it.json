@@ -214,6 +214,10 @@
         "11": "Nov",
         "12": "Dic"
     },
+    "activity": {
+        "create_title": "Inserisci attività",
+        "edit_title": "Dettaglio attività"
+    },
     "timetracker": {
         "pagetitle": "Timetracker",
         "list_title": "Time tracker",

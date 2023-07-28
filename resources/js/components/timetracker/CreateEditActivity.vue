@@ -1,6 +1,6 @@
 <template>
-    <create-edit-layout v-if="showCreateEditActivity && loaded" :disableedit="currentStaff.accepted" element="Staff" icon="fas fa-building-user" @duplicatecomplete="$emit('duplicatecomplete')">
-        <v-col cols="12" xs="12" align="right" class="py-0">
+    <create-edit-layout v-if="showCreateEditActivity && loaded" :disableedit="currentActivity.accepted" element="Activity" icon="fas fa-clock" @duplicatecomplete="$emit('duplicatecomplete')">
+<!--        <v-col cols="12" xs="12" align="right" class="py-0">
             <material-button v-if="!isProfileEdit && canChangeManagers" @click="showInstantEdit('managers_edit')" small outlined :color="$functions.isEmpty(currentStaff.managers) ? '' : 'secondary'">
                 {{ $t("staff.managers") }}
                 <v-icon small class="pl-1">fas fa-user-tie</v-icon>
@@ -14,12 +14,12 @@
                 <v-icon small class="pl-1">far fa-clock</v-icon>
             </material-button>
             <attachments-badge class="ml-2" element="Staff"></attachments-badge>
-        </v-col>
-        <v-col cols="12" xs="12" sm="2" v-if="!isProfileEdit && $can('roles-edit')">
-            <ValidationProvider ref="code" vid="code" :name="$t('staff.code')" rules="" v-slot="{ errors, field }">
-                <v-text-field :label="$t('staff.code')" v-model="currentStaff.code" :error-messages="errors"></v-text-field>
+        </v-col>-->
+        <v-col cols="12" xs="12" sm="2">
+            <ValidationProvider ref="note" vid="note" :name="$t('timetracker.note')" rules="" v-slot="{ errors, field }">
+                <v-text-field :label="$t('timetracker.note')" v-model="currentActivity.note" :error-messages="errors"></v-text-field>
             </ValidationProvider>
-        </v-col>
+        </v-col><!--
         <v-col cols="12" xs="12" :sm="isProfileEdit || !$can('roles-edit') ? 6 : 4">
             <ValidationProvider ref="surname" vid="surname" :name="$t('staff.surname')" rules="required" v-slot="{ errors, field }">
                 <v-text-field class="required" :label="$t('staff.surname')" v-model="currentStaff.surname" :error-messages="errors"></v-text-field>
@@ -184,7 +184,7 @@
                     <material-button @click="setManagers()" color="success" :text="$t('global.ok')" :loading="managers_loading"></material-button>
                 </v-col>
             </template>
-        </instant-edit>
+        </instant-edit>-->
     </create-edit-layout>
 </template>
 
@@ -193,144 +193,46 @@ export default {
     data: () => ({
         stafflogin_loading: false,
         staffdisable_loading: false,
-        temporaryCurrentStaff: null,
+        temporaryCurrentActivity: null,
         internal_note_edit: false,
         managers_edit: false,
         timetable_edit: false,
-        show_create_staff_login: false,
-        stafflogin: {},
         score: 0,
         loaded: false,
-        managers_loading: false,
     }),
     computed: {
-        managersStaff() {
-            let data = _.cloneDeep(this.$appOptions.relatedStaff());
-            data = _.filter(data, function (obj) {
-                return obj.role_name == "Responsabile";
-            });
-            return data;
-        },
-        canChangeManagers() {
-            if (this.$hasRole("Admin")) {
-                if (this.currentStaff.role_name == "Dipendente") {
-                    return true;
-                }
-                if (!_.isEmpty(this.currentStaff.managers)) {
-                    return true;
-                }
-            }
-            return false;
-        },
-        relatedstaff_loading() {
-            return this.$store.getters.relatedstaff_loading;
+        currentActivity: {
+            get: function () {
+                return this.$store.getters.getCurrentActivity;
+            },
+            set: function (value) {
+                this.$store.commit('setCurrentActivity', value)
+            },
         },
         user() {
             return this.$store.getters.getUser;
         },
         isProfileEdit() {
             if (this.user.staff) {
-                if (this.currentStaff.id == this.user.staff.id) {
+                if (this.currentActivity.id === this.user.staff.id) {
                     return true;
                 }
             }
-            return this.$route.name == "user";
-        },
-        currentStaff: {
-            get: function () {
-                return this.$store.getters.getCurrentStaff;
-            },
-            set: function (value) {
-                this.$store.commit("setCurrentStaff", value);
-            },
+            return this.$route.name === "activity";
         },
         showCreateEditActivity() {
             return this.$store.getters.showCreateEditActivity;
-        },
-        displayedScore() {
-            return Math.floor(this.score / 10);
-        },
-        scoreMessage() {
-            return this.$functions.passwordScoreMessage(this.displayedScore);
-        },
-        scoreColor() {
-            return this.$functions.passwordScoreColor(this.displayedScore);
-        },
-        isActiveUser() {
-            return this.currentStaff.user_id && this.currentStaff.user.active;
-        },
+        }
     },
     methods: {
-        confirmCreateStaffLogin() {
-            this.stafflogin_loading = true;
-            this.$store
-                .dispatch("createLogin", this.stafflogin)
-                .then((res) => {
-                    this.show_create_staff_login = false;
-                    this.stafflogin_loading = false;
-                })
-                .catch((err) => {
-                    this.stafflogin_loading = false;
-                });
-        },
-        disableLogin() {
-            this.stafflogin_loading = true;
-            this.$store
-                .dispatch("disableLogin")
-                .then((res) => {
-                    this.stafflogin_loading = false;
-                })
-                .catch((err) => {
-                    this.stafflogin_loading = false;
-                });
-        },
-        disableStaff() {
-            this.staffdisable_loading = true;
-            this.currentStaff.date_end = moment().format("YYYY-MM-DD");
-            this.$store
-                .dispatch("disableStaff")
-                .then((res) => {
-                    this.staffdisable_loading = false;
-                })
-                .catch((err) => {
-                    this.staffdisable_loading = false;
-                });
-        },
-        setManagers() {
-            this.managers_loading = true;
-            this.$store
-                .dispatch("setManagers", { managerIds: this.temporaryCurrentStaff.managers })
-                .then((res) => {
-                    this.managers_edit = false;
-                    this.managers_loading = false;
-                })
-                .catch((err) => {
-                    this.managers_loading = false;
-                });
-        },
         showInstantEdit(model) {
-            let cloned = _.cloneDeep(this.currentStaff);
-            this.temporaryCurrentStaff = cloned;
+            this.temporaryCurrentActivity = _.cloneDeep(this.currentActivity);
             this[model] = true;
-        },
-        undoCreateStaffLogin() {
-            (this.stafflogin = {}), (this.show_create_staff_login = false);
-        },
-        createStaffLogin() {
-            this.stafflogin = {
-                password: null,
-                password_confirmation: null,
-                email: _.cloneDeep(this.currentStaff.private_email),
-            };
-            this.show_create_staff_login = true;
-        },
-        updateStrength(password) {
-            this.score = this.$functions.checkPassword(password);
-        },
+        }
     },
     created() {
-        if (this.currentStaff.id) {
-            this.$store.dispatch("showStaffDetails").then((res) => {
+        if (this.currentActivity.id) {
+            this.$store.dispatch("showActivityDetails").then((res) => {
                 this.loaded = true;
             });
         } else {
