@@ -35,6 +35,45 @@ const getters = {
 }
 
 const actions = {
+    createActivity({ commit, dispatch, rootState }) {
+        commit("START_ACTIVITY_LOADING");
+        return new Promise((resolve, reject) => {
+            if (!state.currentActivity.id) {
+                axios.post('/api/activities', state.currentActivity)
+                    .then(res => {
+                        if (res.data.object != null) {
+                            dispatch('fetchAttendance')
+                        }
+                        dispatch('handleResponseMessage', res.data)
+                        resolve(res.data)
+                    })
+                    .catch(err => {
+                        dispatch('handleError', err);
+                        reject(err)
+                    })
+                    .then(function () {
+                        commit("STOP_ACTIVITY_LOADING")
+                    });
+            }
+            else {
+                axios.put('/api/activities/' + state.currentActivity.id, state.currentActivity)
+                    .then(res => {
+                        if (res.data.object != null) {
+                            dispatch('fetchActivities');
+                        }
+                        dispatch('handleResponseMessage', res.data)
+                        resolve(res.data)
+                    })
+                    .catch(err => {
+                        dispatch('handleError', err);
+                        reject(err)
+                    })
+                    .then(function () {
+                        commit("STOP_ACTIVITY_LOADING")
+                    });
+            }
+        })
+    },
     fetchActivities({ commit, dispatch }) {
         commit('START_ACTIVITY_LOADING');
         axios.get('/api/activities', { params: state.activity_options })
@@ -127,11 +166,9 @@ const mutations = {
     },
     setActivityTypes(state, value) {
         Vue.set(state, 'activity_types', value)
-        // state.activity_types = JSON.parse(JSON.stringify(state.activity_types))
     },
     setProjects(state, value) {
         Vue.set(state, 'projects', value)
-        // state.projects = JSON.parse(JSON.stringify(state.projects))
     },
     START_ACTIVITY_LOADING(state) {
         state.activity_loading++
@@ -153,7 +190,6 @@ const mutations = {
     },
     setCurrentActivity(state, value) {
         Vue.set(state, 'currentActivity', value)
-        state.currentActivity = JSON.parse(JSON.stringify(state.currentActivity))
     },
     setActivities(state, value) {
         Vue.set(state, 'activities', value)
