@@ -3,8 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Activity;
-use App\Models\Attendance;
+use App\Models\AttendanceType;
 use App\Traits\ActivityFunctions;
+use App\Traits\AttendanceFunctions;
 use Carbon\Carbon;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\JsonResponse;
@@ -12,7 +13,7 @@ use App\Http\Requests\SimpleRequest as Request;
 use Illuminate\Support\Facades\Auth;
 
 class ActivityController extends Controller {
-    use ActivityFunctions;
+    use ActivityFunctions, AttendanceFunctions;
 
     /**
      * @throws AuthorizationException
@@ -39,7 +40,11 @@ class ActivityController extends Controller {
         return response()->json($activity);
     }
 
-    public function update(Request $request, $id) {
+    /**
+     * @throws AuthorizationException
+     */
+    public function update(Request $request, $id): JsonResponse
+    {
 
         $activity = Activity::findOrFail($id);
 
@@ -97,7 +102,16 @@ class ActivityController extends Controller {
             'timepicker' => 'required|date',
             'note' => 'nullable|string|max:255',
         ]);
+        $day = Carbon::parse($request["day"]);
 
+        //controllo se l'azienda è chiusa in quel giorno
+        $is_activity_closed = $this->isAttendanceAlreadyPresent($request["day"], $request["day"], 'date', null,null,[AttendanceType::CLOSURE_TYPE_ID]);
+        if ($is_activity_closed) {
+            return response()->json([
+                'code'      => 1,
+                'message'   => 'Attenzione, nella data selezionata l\'azienda è chiusa!'
+            ]);
+        }
         $hours = Carbon::parse($request["timepicker"])->format("H");
         $minutes = Carbon::parse($request["timepicker"])->format("i");
         $minutes = $this->minutesToFraction($minutes);
