@@ -42,7 +42,7 @@ const actions = {
                 axios.post('/api/activities', state.currentActivity)
                     .then(res => {
                         if (res.data.object != null) {
-                            dispatch('fetchAttendance')
+                            dispatch('fetchActivities')
                         }
                         dispatch('handleResponseMessage', res.data)
                         resolve(res.data)

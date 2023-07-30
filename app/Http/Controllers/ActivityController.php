@@ -41,6 +41,50 @@ class ActivityController extends Controller {
 
     public function update(Request $request, $id) {
 
+        $activity = Activity::findOrFail($id);
+
+        $this->authorize('update', $activity);
+
+        $authUser = Auth::user();
+        $request->validate([
+            'day' => 'required',
+            'activity_type_id' => 'exists:activity_types,id',
+            'project_id' => 'exists:projects,id',
+            'timepicker' => 'required|date',
+            'note' => 'nullable|string|max:255',
+        ]);
+
+        $hours = Carbon::parse($request["timepicker"])->format("H");
+        $minutes = Carbon::parse($request["timepicker"])->format("i");
+        $minutes = $this->minutesToFraction($minutes);
+
+        $worked_hours = (int)$hours+(float)("0.".$minutes);
+        if($worked_hours == 0)
+            return response()->json([
+                'code'      => 1,
+                'message'   => 'Inserire le ore lavorate'
+            ]);
+
+        try{
+            $activity->day = $request["day"];
+            $activity->hours = $worked_hours;
+            $activity->staff_id = $authUser->staff->id;
+            $activity->project_id = $request["project_id"];
+            $activity->activity_type_id = $request["activity_type_id"];
+            $activity->note = $request["note"];
+            $activity->save();
+        }
+        catch(\Exception $e){
+            return response()->json([
+                'code'      => 1,
+                'message'   => 'Errore di sistema'//$e->getMessage()
+            ]);
+        }
+        return response()->json([
+            'code'      => 0,
+            'message'   => 'Attività modificata con successo',
+            'object'    => $activity
+        ]);
     }
 
     public function store(Request $request): JsonResponse
@@ -88,7 +132,20 @@ class ActivityController extends Controller {
         ]);
     }
 
-    public function delete(Request $request) {
+    /**
+     * @throws AuthorizationException
+     */
+    public function destroy($id): JsonResponse
+    {
+        $activity = Activity::findOrFail($id);
+        $this->authorize('delete', $activity);
 
+        $activity->delete();
+
+        return response()->json([
+            'code'      => 0,
+            'message'   => 'Attività cancellata con successo.',
+            'object'    => $activity,
+        ]);
     }
 }

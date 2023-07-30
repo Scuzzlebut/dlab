@@ -32,7 +32,7 @@ class ActivityPolicy
      */
     public function view(User $user, Activity $activity): bool
     {
-        return (in_array($user->staff->role->role_slug, ['admin']) ||
+        return ($user->staff->role->role_slug == 'admin' ||
             $user->staff->collaborators->contains($activity->staff_id) || // manager può vedere solo le sue e quelle dei suoi collaboratori
             $user->staff->id === $activity->staff_id
         );
@@ -59,7 +59,7 @@ class ActivityPolicy
      */
     public function update(User $user, Activity $activity): Response|bool
     {
-        return (in_array($user->staff->role->role_slug, ['admin']) ||
+        return ($user->staff->role->role_slug == 'admin' ||
             $user->staff->collaborators->contains($activity->staff_id) || //manager può gestire solo le sue e quelle dei suoi collaboratori
             $user->staff->id === $activity->staff_id
         );
@@ -74,7 +74,7 @@ class ActivityPolicy
      */
     public function delete(User $user, Activity $activity): bool
     {
-        return (in_array($user->staff->role->role_slug, ['admin']) ||
+        return ($user->staff->role->role_slug == 'admin' ||
             $user->staff->collaborators->contains($activity->staff_id) || //manager può gestire solo le sue e quelle dei suoi collaboratori
             $user->staff->id === $activity->staff_id
         );
