@@ -127,7 +127,7 @@ trait AttendanceFunctions {
     }
 
     //verifica che nell'intervallo della richiesta d'assenza non sia già presente un'altra richiesta
-    public function isAttendanceAlreadyPresent($date_start, $date_end, $compare_method = 'datetime', $staff_id = null, $id = null, $attendance_type=null) {
+    public function isAttendanceAlreadyPresent($date_start, $date_end, $compare_method = 'datetime', $staff_id = null, $id = null, $attendance_type=null, $return_results = false) {
         $attendances = Attendance::where(function ($q) use ($date_start, $date_end, $compare_method) {
             //se [$compare_method = 'date'] => check solo su data
             //se [$compare_method = 'datetime'] => check su data+orari
@@ -177,6 +177,9 @@ trait AttendanceFunctions {
         if ($id != null) {
             $attendances->where('id', '!=', $id);
         }
+        //ritorna risultati trovati piuttosto che bool
+        if($return_results)
+            return $attendances->ViewActiveStaff()->get();
 
         return ($attendances->ViewActiveStaff()->count()) ? true : false;
     }

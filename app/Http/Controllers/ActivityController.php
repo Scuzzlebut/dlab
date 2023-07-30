@@ -95,6 +95,7 @@ class ActivityController extends Controller {
     public function store(Request $request): JsonResponse
     {
         $authUser = Auth::user();
+        $authUser_id = $authUser->staff->id;
         $request->validate([
             'day' => 'required',
             'activity_type_id' => 'exists:activity_types,id',
@@ -112,6 +113,29 @@ class ActivityController extends Controller {
                 'message'   => 'Attenzione, nella data selezionata l\'azienda è chiusa!'
             ]);
         }
+        //controllo se il dipendente è in ferie
+        $is_staff_on_vacation = $this->isAttendanceAlreadyPresent($request["day"], $request["day"], 'date', $authUser_id,null,[AttendanceType::VACATION_TYPE_ID]);
+        if ($is_staff_on_vacation) {
+            return response()->json([
+                'code'      => 1,
+                'message'   => 'Attenzione, Nella data selezionata sei in ferie.'
+            ]);
+        }
+        //calcolo ore lavorative base
+        $base_hours = $this->calcAttendanceHours($day->format("Y-m-d H:i:s"), $day->addDay()->format("Y-m-d H:i:s"),$authUser_id);
+        //calcolo ore assenze
+        $results = $this->isAttendanceAlreadyPresent($request["day"], $request["day"], 'date', $authUser_id,null,[AttendanceType::ABSENSE_TYPE_ID,AttendanceType::SICKNESS_TYPE_ID,AttendanceType::TIMEOFF_TYPE_ID],true);
+        $missing_hours = 0;
+        foreach ($results as $result)
+            $missing_hours+=$result->hours;
+        //calcolo ore straordinario
+        $results = $this->isAttendanceAlreadyPresent($request["day"], $request["day"], 'date', $authUser_id,null,[AttendanceType::OT_TYPE_ID],true);
+        $ot_hours = 0;
+        foreach ($results as $result)
+            $ot_hours+=$result->hours;
+        //calcolo ore libere residue
+        $workable_hours = $base_hours-$missing_hours+$ot_hours;
+
         $hours = Carbon::parse($request["timepicker"])->format("H");
         $minutes = Carbon::parse($request["timepicker"])->format("i");
         $minutes = $this->minutesToFraction($minutes);
@@ -127,7 +151,7 @@ class ActivityController extends Controller {
             $activity = new Activity();
             $activity->day = $request["day"];
             $activity->hours = $worked_hours;
-            $activity->staff_id = $authUser->staff->id;
+            $activity->staff_id = $authUser_id;
             $activity->project_id = $request["project_id"];
             $activity->activity_type_id = $request["activity_type_id"];
             $activity->note = $request["note"];

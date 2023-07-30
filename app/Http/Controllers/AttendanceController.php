@@ -190,8 +190,11 @@ class AttendanceController extends Controller {
                 }
             }
         } else {
-            //calcolo le ore dell'assenza (non servono controlli, sono in creazione)
-            $request_data['hours'] = $this->calcAttendanceHours($request_data['date_start'], $request_data['date_end'], $request['staff_id']);
+            //calcolo le ore dell'assenza(non servono controlli, sono in creazione)
+            if($request["type_id"]===AttendanceType::OT_TYPE_ID)
+                $request_data['hours'] = $request_data['date_end']->diffInMinutes($request["date_start"])/60;
+            else
+                $request_data['hours'] = $this->calcAttendanceHours($request_data['date_start'], $request_data['date_end'], $request['staff_id']);
             $attendance = Attendance::create($request_data);
         }
 
@@ -293,7 +296,10 @@ class AttendanceController extends Controller {
             }
         } else {
             //ricalcolo le ore dell'assenza
-            $request_data['hours'] = $this->calcAttendanceHours($request_data['date_start'], $request_data['date_end'], $request['staff_id']);
+            if($request["type_id"]===AttendanceType::OT_TYPE_ID)
+                $request_data['hours'] = $request_data['date_end']->diffInMinutes($request["date_start"])/60;
+            else
+                $request_data['hours'] = $this->calcAttendanceHours($request_data['date_start'], $request_data['date_end'], $request['staff_id']);
             $attendance->fill($request_data);
             $attendance->save();
         }
