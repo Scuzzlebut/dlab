@@ -22,7 +22,16 @@ class ActivityController extends Controller {
     {
         $this->authorize('viewAny', Activity::class);
 
+        $type_id = $request->type_id; //tipologia attività
+        $project_id = $request->project_id; //progetto
+
         $activities = Activity::with('project', 'staff', 'type');
+
+        if (isset($type_id) && !empty($type_id))
+            $activities = $activities->where('activity_type_id', $type_id);
+        if (isset($project_id) && !empty($project_id))
+            $activities = $activities->where('project_id', $project_id);
+
         $activities = $this->doTheSearch($activities, $request);
         $activities = $this->doTheSort($activities, $request);
         $activities = $this->doThePagination($activities, $request);
