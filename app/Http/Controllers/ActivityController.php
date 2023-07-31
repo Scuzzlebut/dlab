@@ -29,7 +29,7 @@ class ActivityController extends Controller {
         $project_id = $request->project_id; //progetto
         $staff_ids = $request->staff_ids; //staff
 
-        $activities = Activity::with('project', 'staff', 'type');
+        $activities = Activity::with('project', 'staff', 'type')->viewByRole()->viewActiveStaff();
 
         if (isset($month) && !empty($month))
             $activities->whereMonth('day', $month);
