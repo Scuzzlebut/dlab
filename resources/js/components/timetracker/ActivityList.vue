@@ -4,11 +4,20 @@
             <template slot="selection-actions">
             </template>
             <template slot="filters">
+                <v-col cols="3" xs="6" sm="1">
+                    <v-select hide-details :label="$t('global.year')" :items="$appOptions.years()" v-model="activity_options.year" clearable @change="activity_options.page = 1"></v-select>
+                </v-col>
+                <v-col cols="3" xs="6" sm="1">
+                    <v-select hide-details :label="$t('global.month')" :items="$appOptions.months()" v-model="activity_options.month" clearable item-text="label" item-value="value" :disabled="!activity_options.year" @change="activity_options.page = 1"></v-select>
+                </v-col>
                 <v-col cols="6" xs="6" sm="3">
                     <v-select hide-details :label="$t('timetracker.type')" :items="$appOptions.activityTypes()" v-model="activity_options.type_id" clearable @change="activity_options.page = 1" item-text="title" item-value="id"></v-select>
                 </v-col>
                 <v-col cols="6" xs="6" sm="3">
                     <v-select hide-details :label="$t('timetracker.project')" :items="$appOptions.projects()" v-model="activity_options.project_id" clearable @change="activity_options.page = 1" item-text="title" item-value="id"></v-select>
+                </v-col>
+                <v-col cols="6" xs="6" sm="4" v-if="$can('attendance-others')">
+                    <related-staff v-model="activity_options.staff_ids" multiple></related-staff>
                 </v-col>
             </template>
             <material-table @click-action="editActivity" :headers="activity_headers" :items="activities.data" :options.sync="activity_options" :server-items-length="activities.total" :loading="activity_loading">

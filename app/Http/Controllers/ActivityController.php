@@ -22,16 +22,26 @@ class ActivityController extends Controller {
     {
         $this->authorize('viewAny', Activity::class);
 
+        $year = $request->year; //anno
+        $month = $request->month; //mese
+        //TODO valutare se aggiungere filtro per il giorno
         $type_id = $request->type_id; //tipologia attività
         $project_id = $request->project_id; //progetto
+        $staff_ids = $request->staff_ids; //staff
 
         $activities = Activity::with('project', 'staff', 'type');
 
+        if (isset($month) && !empty($month))
+            $activities->whereMonth('day', $month);
+        if (isset($year) && !empty($year))
+            $activities->whereYear('day', $year);
         if (isset($type_id) && !empty($type_id))
             $activities = $activities->where('activity_type_id', $type_id);
         if (isset($project_id) && !empty($project_id))
             $activities = $activities->where('project_id', $project_id);
-
+        if (isset($staff_ids) && !empty($staff_ids)) {
+            $activities->whereIn('staff_id', $staff_ids);
+        }
         $activities = $this->doTheSearch($activities, $request);
         $activities = $this->doTheSort($activities, $request);
         $activities = $this->doThePagination($activities, $request);
